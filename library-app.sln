@@ -1,0 +1,71 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5372B314-2F3D-4F6B-AAB2-06B54F6FBE47}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{FC2446A7-470C-4231-8995-329CCBB16B6E}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		misc\README.md = misc\README.md
+		docker-compose.yaml = docker-compose.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "services", "services", "{AE555AE7-2CCE-4D57-8CE3-348D435CE569}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cart&Wishlist", "Cart&Wishlist", "{93354072-1DD2-468C-99DA-C3124CAA8679}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CartAndWishlist.Domain", "src\services\Cart&Wishlist\CartAndWishlist.Domain\CartAndWishlist.Domain.csproj", "{4712E4A1-6072-4BF9-A0BA-9AF52A5F6E7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CartAndWishlist.DAL", "src\services\Cart&Wishlist\CartAndWishlist.DAL\CartAndWishlist.DAL.csproj", "{4D65E41D-CA0C-49CB-A383-1A9BAACF0E55}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CartAndWishlist.BLL", "src\services\Cart&Wishlist\CartAndWishlist.BLL\CartAndWishlist.BLL.csproj", "{EE1DBE68-94F9-493A-B943-C4D06C6861ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CartAndWishlist.API", "src\services\Cart&Wishlist\CartAndWishlist.API\CartAndWishlist.API.csproj", "{CEA723AD-2511-4725-AE34-F6D5BE74E0FB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shared", "shared", "{A207E4FC-4357-479C-963C-0872AE3E66AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "src\shared\Shared\Shared.csproj", "{17BB5C3C-9BF7-4BFB-9B2F-240BFAB0417A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AE555AE7-2CCE-4D57-8CE3-348D435CE569} = {5372B314-2F3D-4F6B-AAB2-06B54F6FBE47}
+		{93354072-1DD2-468C-99DA-C3124CAA8679} = {AE555AE7-2CCE-4D57-8CE3-348D435CE569}
+		{4712E4A1-6072-4BF9-A0BA-9AF52A5F6E7B} = {93354072-1DD2-468C-99DA-C3124CAA8679}
+		{4D65E41D-CA0C-49CB-A383-1A9BAACF0E55} = {93354072-1DD2-468C-99DA-C3124CAA8679}
+		{EE1DBE68-94F9-493A-B943-C4D06C6861ED} = {93354072-1DD2-468C-99DA-C3124CAA8679}
+		{CEA723AD-2511-4725-AE34-F6D5BE74E0FB} = {93354072-1DD2-468C-99DA-C3124CAA8679}
+		{A207E4FC-4357-479C-963C-0872AE3E66AD} = {5372B314-2F3D-4F6B-AAB2-06B54F6FBE47}
+		{17BB5C3C-9BF7-4BFB-9B2F-240BFAB0417A} = {A207E4FC-4357-479C-963C-0872AE3E66AD}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4712E4A1-6072-4BF9-A0BA-9AF52A5F6E7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4712E4A1-6072-4BF9-A0BA-9AF52A5F6E7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4712E4A1-6072-4BF9-A0BA-9AF52A5F6E7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4712E4A1-6072-4BF9-A0BA-9AF52A5F6E7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D65E41D-CA0C-49CB-A383-1A9BAACF0E55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D65E41D-CA0C-49CB-A383-1A9BAACF0E55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D65E41D-CA0C-49CB-A383-1A9BAACF0E55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D65E41D-CA0C-49CB-A383-1A9BAACF0E55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE1DBE68-94F9-493A-B943-C4D06C6861ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE1DBE68-94F9-493A-B943-C4D06C6861ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE1DBE68-94F9-493A-B943-C4D06C6861ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE1DBE68-94F9-493A-B943-C4D06C6861ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEA723AD-2511-4725-AE34-F6D5BE74E0FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEA723AD-2511-4725-AE34-F6D5BE74E0FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEA723AD-2511-4725-AE34-F6D5BE74E0FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEA723AD-2511-4725-AE34-F6D5BE74E0FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17BB5C3C-9BF7-4BFB-9B2F-240BFAB0417A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17BB5C3C-9BF7-4BFB-9B2F-240BFAB0417A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17BB5C3C-9BF7-4BFB-9B2F-240BFAB0417A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17BB5C3C-9BF7-4BFB-9B2F-240BFAB0417A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

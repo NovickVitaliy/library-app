@@ -1,0 +1,33 @@
+services:
+  cart-and-wishlist-db:
+    image: postgres
+    container_name: cart-and-wishlist-db
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_USER=admin
+      - POSTGRES_DB=cartAndWishlistDb
+    ports:
+      - "5432:5432"
+    volumes:
+      - cart-and-wishlist-db.volume:/var/lib/postgresql/data
+        
+  cartandwishlist.api:
+    image: cartandwishlist.api
+    build:
+      context: .
+      dockerfile: src/services/Cart&Wishlist/CartAndWishlist.API/Dockerfile
+    container_name: cartandwishlist.api
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__Default=Host=cart-and-wishlist-db;Port=5432;Database=cartAndWishlistDb;Username=admin;Password=12345;
+    depends_on:
+      - cart-and-wishlist-db
+    ports:
+      - "16000:8080"
+
+volumes:
+  cart-and-wishlist-db.volume:  
+
