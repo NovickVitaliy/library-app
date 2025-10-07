@@ -23,7 +23,7 @@ public class WishlistItemRepository : RepositoryBase, IWishlistItemRepository
             new {WishlistItemId = wishlistItemId},
             transaction: Transaction,
             cancellationToken: cancellationToken);
-        return await Connection.QuerySingleOrDefaultAsync(cmd);
+        return await Connection.QuerySingleOrDefaultAsync<WishlistItem>(cmd);
     }
     
     public async Task<WishlistItem> CreateWishlistItemAsync(WishlistItem wishlistItem, CancellationToken cancellationToken)

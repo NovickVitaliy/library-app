@@ -144,13 +144,13 @@ public class CartItemsService : ICartItemsService
         }
     }
     
-    public async Task<Result<PaginationResult<CartItemDto>>> GetCartItemsAsync(GetCartItemsRequest request, CancellationToken cancellationToken)
+    public async Task<Result<PaginationResult<CartItemDto>>> GetCartItemsAsync(Guid id, GetCartItemsRequest request, CancellationToken cancellationToken)
     {
         try
         {
             await _unitOfWork.BeginTransactionAsync();
-            var cartItems = await _unitOfWork.CartItemRepository.GetCartItemsAsync(request.CartId, request.PageNumber, request.PageSize, cancellationToken);
-            var totalCount = await _unitOfWork.CartItemRepository.CountAllAsync(request.CartId, cancellationToken);
+            var cartItems = await _unitOfWork.CartItemRepository.GetCartItemsAsync(id, request.PageNumber, request.PageSize, cancellationToken);
+            var totalCount = await _unitOfWork.CartItemRepository.CountAllAsync(id, cancellationToken);
 
             await _unitOfWork.CommitTransactionAsync();
 

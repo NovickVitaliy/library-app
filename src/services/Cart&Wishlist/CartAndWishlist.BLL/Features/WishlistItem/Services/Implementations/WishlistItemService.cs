@@ -115,21 +115,21 @@ public class WishlistItemService : IWishlistItemService
         }
     }
     
-    public async Task<Result<PaginationResult<WishlistItemDto>>> GetWishlistItemsAsync(GetWishlistItemsRequest request, CancellationToken cancellationToken)
+    public async Task<Result<PaginationResult<WishlistItemDto>>> GetWishlistItemsAsync(Guid id, GetWishlistItemsRequest request, CancellationToken cancellationToken)
     {
         try
         {
             await _unitOfWork.BeginTransactionAsync();
 
-            var wishlist = await _unitOfWork.WishlistRepository.GetWishlistAsync(request.WishlistId, cancellationToken);
+            var wishlist = await _unitOfWork.WishlistRepository.GetWishlistAsync(id, cancellationToken);
             if (wishlist is null)
             {
                 await _unitOfWork.CommitTransactionAsync();
-                return Result<PaginationResult<WishlistItemDto>>.NotFound(key: request.WishlistId, entityName: nameof(Domain.Models.Wishlist));
+                return Result<PaginationResult<WishlistItemDto>>.NotFound(key: id, entityName: nameof(Domain.Models.Wishlist));
             }
 
-            var wishlistItems = await _unitOfWork.WishlistItemRepository.GetWishlistItemsAsync(request.WishlistId, request.PageSize, request.PageNumber, cancellationToken);
-            var totalCount = await _unitOfWork.WishlistItemRepository.CountAllWishlistItemsInWishlistAsync(request.WishlistId, cancellationToken);
+            var wishlistItems = await _unitOfWork.WishlistItemRepository.GetWishlistItemsAsync(id, request.PageSize, request.PageNumber, cancellationToken);
+            var totalCount = await _unitOfWork.WishlistItemRepository.CountAllWishlistItemsInWishlistAsync(id, cancellationToken);
             
             await _unitOfWork.CommitTransactionAsync();
             

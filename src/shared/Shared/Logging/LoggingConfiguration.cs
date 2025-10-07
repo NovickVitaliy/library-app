@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Serilog;
+using Serilog.Exceptions;
 
 namespace Shared.Logging;
 
@@ -9,7 +10,9 @@ public static class LoggingConfiguration
     {
         hostBuilder.UseSerilog((context, config) =>
         {
-            config.ReadFrom.Configuration(context.Configuration);
+            config.ReadFrom.Configuration(context.Configuration)
+                .Enrich.WithExceptionDetails()
+                .Enrich.FromLogContext();
         });
     }
 }

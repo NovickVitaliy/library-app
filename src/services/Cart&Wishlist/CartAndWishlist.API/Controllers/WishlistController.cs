@@ -60,7 +60,6 @@ public class WishlistController : BaseApiController
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetWishlistItemsAsync(Guid id, [FromQuery] GetWishlistItemsRequest request, CancellationToken cancellationToken)
     {
-        request = request with { WishlistId = id };
-        return (await _wishlistItemService.GetWishlistItemsAsync(request, cancellationToken)).ToApiResponse();
+        return (await _wishlistItemService.GetWishlistItemsAsync(id, request, cancellationToken)).ToApiResponse();
     }
 }

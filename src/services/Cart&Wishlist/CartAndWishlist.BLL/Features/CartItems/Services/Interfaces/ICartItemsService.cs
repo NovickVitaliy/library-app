@@ -11,5 +11,5 @@ public interface ICartItemsService
     Task<Result<CartItemDto>> CreateCartItemAsync(CreateCartItemRequest request, CancellationToken cancellationToken);
     Task<Result<CartItemDto>> UpdateCartItemAsync(Guid cartItemId, UpdateCartItemRequest request, CancellationToken cancellationToken);
     Task<Result<bool>> DeleteCartItemAsync(DeleteCartItemRequest request, CancellationToken cancellationToken);
-    Task<Result<PaginationResult<CartItemDto>>> GetCartItemsAsync(GetCartItemsRequest request, CancellationToken cancellationToken);
+    Task<Result<PaginationResult<CartItemDto>>> GetCartItemsAsync(Guid id ,GetCartItemsRequest request, CancellationToken cancellationToken);
 }

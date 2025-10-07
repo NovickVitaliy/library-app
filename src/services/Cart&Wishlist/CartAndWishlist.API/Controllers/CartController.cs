@@ -63,7 +63,6 @@ public class CartController : BaseApiController
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetCartItemsAsync(Guid cartId, [FromQuery] GetCartItemsRequest request, CancellationToken cancellationToken)
     {
-        request = request with { CartId = cartId };
-        return (await _cartItemsService.GetCartItemsAsync(request, cancellationToken)).ToApiResponse();
+        return (await _cartItemsService.GetCartItemsAsync(cartId, request, cancellationToken)).ToApiResponse();
     }
 }

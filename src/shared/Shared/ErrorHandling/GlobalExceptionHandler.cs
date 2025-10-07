@@ -3,17 +3,29 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Shared.Exceptions;
 
 namespace Shared.ErrorHandling;
 
 public class GlobalExceptionHandler : IExceptionHandler
 {
+    private readonly ILogger<GlobalExceptionHandler> _logger;
+    
+    public GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
+    {
+        _logger = logger;
+    }
+    
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext, 
         Exception exception,
         CancellationToken cancellationToken)
     {
+        _logger.LogError(exception,
+            "Unhandled exception occurred. Path: {RequestPath}, CorrelationId: {CorrelationId}",
+            httpContext.Request.Path,
+            httpContext.Items["X-Correlation-Id"]);
         var problemDetails = CreateProblemDetails(exception, httpContext);
 
         httpContext.Response.ContentType = "application/json";
