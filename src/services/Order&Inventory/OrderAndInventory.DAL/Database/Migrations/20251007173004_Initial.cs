@@ -65,7 +65,7 @@ namespace OrderAndInventory.DAL.Database.Migrations
                     member_id = table.Column<Guid>(type: "uuid", nullable: false),
                     order_date = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     status = table.Column<string>(type: "text", nullable: false),
-                    row_version = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: false)
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -88,7 +88,7 @@ namespace OrderAndInventory.DAL.Database.Migrations
                     book_id = table.Column<Guid>(type: "uuid", nullable: false),
                     quantity = table.Column<int>(type: "integer", nullable: false),
                     unit_price = table.Column<decimal>(type: "numeric", nullable: false),
-                    row_version = table.Column<byte[]>(type: "bytea", rowVersion: true, nullable: false)
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {

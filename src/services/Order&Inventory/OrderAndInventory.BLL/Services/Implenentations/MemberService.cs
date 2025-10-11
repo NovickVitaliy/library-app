@@ -50,7 +50,7 @@ public class MemberService : IMemberService
 
         var specification = new MemberSpecification(request);
         var members = (await _unitOfWork.MemberRepository.ListBySpecAsync(specification, cancellationToken)).ToList();
-        var totalCount = await _unitOfWork.MemberRepository.CountBySpecAsync(specification, cancellationToken);
+        var totalCount = await _unitOfWork.MemberRepository.CountBySpecAsync(new MemberSpecification(request, true), cancellationToken);
 
         _logger.LogInformation("Fetched {Count} members (Page {PageNumber}, PageSize {PageSize})",
             members.Count, request.PageNumber, request.PageSize);

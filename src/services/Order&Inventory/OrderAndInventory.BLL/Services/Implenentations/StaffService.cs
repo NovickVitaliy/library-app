@@ -42,7 +42,7 @@ public class StaffService : IStaffService
         _logger.LogInformation("Fetching staffs with filters: {@Request}", request);
         var spec = new StaffSpecification(request);
         var staffs = (await _unitOfWork.StaffRepository.ListBySpecAsync(spec, cancellationToken)).ToList();
-        var totalCount = await _unitOfWork.StaffRepository.CountBySpecAsync(spec, cancellationToken);
+        var totalCount = await _unitOfWork.StaffRepository.CountBySpecAsync(new StaffSpecification(request, true), cancellationToken);
         _logger.LogInformation("Fetched {Count} staffs", staffs.Count);
         return Result<PaginationResult<StaffDto>>.Ok(new PaginationResult<StaffDto>(
             staffs.Select(_mapper.Map<StaffDto>).ToArray(),
@@ -72,7 +72,10 @@ public class StaffService : IStaffService
             _logger.LogWarning("Staff with ID {StaffId} not found", id);
             return Result<StaffDto?>.NotFound(key: id, entityName: nameof(Staff));
         }
-        _mapper.Map(request, staff);
+
+        staff.Name = request.Name;
+        staff.Role = request.Role;
+        
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         _logger.LogInformation("Staff with ID {StaffId} updated successfully", id);
         return Result<StaffDto?>.Ok(_mapper.Map<StaffDto>(staff));

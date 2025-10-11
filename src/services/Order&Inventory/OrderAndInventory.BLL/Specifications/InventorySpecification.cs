@@ -6,7 +6,7 @@ namespace OrderAndInventory.BLL.Specifications;
 
 public class InventorySpecification : Specification<Inventory>
 {
-    public InventorySpecification(GetInventoriesRequest request)
+    public InventorySpecification(GetInventoriesRequest request, bool ignorePagination = false)
     {
         if (request.MinStockQuantity.HasValue)
         {
@@ -73,8 +73,11 @@ public class InventorySpecification : Specification<Inventory>
             Query.OrderBy(x => x.InventoryId);
         }
 
-        Query
-            .Skip((request.PageNumber - 1) * request.PageNumber)
-            .Take(request.PageSize);
+        if (!ignorePagination)
+        {
+            Query
+                .Skip((request.PageNumber - 1) * request.PageNumber)
+                .Take(request.PageSize);
+        }
     }
 }

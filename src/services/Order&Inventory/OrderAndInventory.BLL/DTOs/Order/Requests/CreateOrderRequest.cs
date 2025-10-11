@@ -8,4 +8,4 @@ namespace OrderAndInventory.BLL.DTOs.Order.Requests;
 public record CreateOrderRequest(
         [Required(ErrorMessage = "Member Id is required")] Guid MemberId,
         CreateOrderItemRequest[] OrderItems,
-        CreateStaffOrderRequest[] StaffOrders) : PaginationRequest;
+        CreateStaffOrderRequest[] StaffOrders);

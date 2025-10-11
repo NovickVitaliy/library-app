@@ -3,6 +3,7 @@ using OrderAndInventory.DAL;
 using OrderAndInventory.DAL.Database;
 using Shared.ErrorHandling;
 using Shared.Logging;
+using Shared.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,8 @@ builder.Services
     .ConfigureBusinessLayer();
 
 var app = builder.Build();
+
+app.UseMiddleware<CorrelationIdMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {

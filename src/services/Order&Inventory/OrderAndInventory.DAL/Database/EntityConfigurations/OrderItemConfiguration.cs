@@ -29,6 +29,9 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
             .IsRequired();
 
         builder.Property(x => x.RowVersion)
-            .IsRowVersion();
+            .HasColumnName("xmin")
+            .HasColumnType("xid")
+            .IsConcurrencyToken()
+            .ValueGeneratedOnAddOrUpdate();
     }
 }

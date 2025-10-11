@@ -31,6 +31,7 @@ public class PaymentService : IPaymentService
 
         var payment = _mapper.Map<Payment>(request);
         payment.PaymentId = Guid.CreateVersion7();
+        payment.PaidDate = DateTimeOffset.UtcNow;
 
         await _unitOfWork.PaymentRepository.AddAsync(payment, cancellationToken);
         order.Status = OrderStatus.Processing;
@@ -44,7 +45,7 @@ public class PaymentService : IPaymentService
     {
         var specification = new PaymentSpecification(request);
         var payments = (await _unitOfWork.PaymentRepository.ListBySpecAsync(specification, cancellationToken)).ToList();
-        var totalCount = await _unitOfWork.PaymentRepository.CountBySpecAsync(specification, cancellationToken);
+        var totalCount = await _unitOfWork.PaymentRepository.CountBySpecAsync(new PaymentSpecification(request, true), cancellationToken);
 
         return Result<PaginationResult<PaymentDto>>.Ok(new PaginationResult<PaymentDto>(
                 payments.Select(_mapper.Map<PaymentDto>).ToArray(),

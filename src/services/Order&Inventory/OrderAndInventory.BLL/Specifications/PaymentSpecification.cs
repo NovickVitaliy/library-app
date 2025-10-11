@@ -6,7 +6,7 @@ namespace OrderAndInventory.BLL.Specifications;
 
 public class PaymentSpecification : Specification<Payment>
 {
-    public PaymentSpecification(GetPaymentsRequest request)
+    public PaymentSpecification(GetPaymentsRequest request, bool ignorePagination = false)
     {
         if (request.MinAmount.HasValue)
             Query.Where(p => p.Amount >= request.MinAmount.Value);
@@ -58,9 +58,12 @@ public class PaymentSpecification : Specification<Payment>
             Query.OrderBy(p => p.PaymentId);
         }
 
-        var skip = (request.PageNumber - 1) * request.PageSize;
-        Query.Skip(skip).Take(request.PageSize);
-
+        if (!ignorePagination)
+        {
+            var skip = (request.PageNumber - 1) * request.PageSize;
+            Query.Skip(skip).Take(request.PageSize);
+        }
+        
         Query.Include(p => p.Order);
     }
 }

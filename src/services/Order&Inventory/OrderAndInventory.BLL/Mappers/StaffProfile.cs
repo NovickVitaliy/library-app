@@ -10,6 +10,7 @@ public class StaffProfile : Profile
     public StaffProfile()
     {
         CreateMap<CreateStaffRequest, Staff>();
-        CreateMap<Staff, StaffDto>();
+        CreateMap<Staff, StaffDto>()
+            .ForCtorParam("Orders", opt => opt.MapFrom(x => x.StaffOrders.Select(y => y.Order)));
     }
 }

@@ -1,4 +1,5 @@
 using Ardalis.Specification;
+using Microsoft.EntityFrameworkCore;
 using OrderAndInventory.BLL.DTOs.Member.Requests;
 using OrderAndInventory.DAL.Models;
 
@@ -6,26 +7,26 @@ namespace OrderAndInventory.BLL.Specifications;
 
 public class MemberSpecification : Specification<Member>
 {
-    public MemberSpecification(GetMembersRequest request)
+    public MemberSpecification(GetMembersRequest request, bool ignorePagination = false)
     {
         if (!string.IsNullOrWhiteSpace(request.Email))
         {
-            Query.Where(m => m.Email.Contains(request.Email));
+            Query.Where(m => EF.Functions.ILike(m.Email, $"%{request.Email}%"));
         }
 
         if (!string.IsNullOrWhiteSpace(request.FirstName))
         {
-            Query.Where(m => m.FirstName.Contains(request.FirstName));
+            Query.Where(m => EF.Functions.ILike(m.FirstName, $"%{request.FirstName}%"));
         }
 
         if (!string.IsNullOrWhiteSpace(request.LastName))
         {
-            Query.Where(m => m.LastName.Contains(request.LastName));
+            Query.Where(m => EF.Functions.ILike(m.LastName, $"%{request.LastName}%"));
         }
 
         if (!string.IsNullOrWhiteSpace(request.PhoneNumber))
         {
-            Query.Where(m => m.PhoneNumber.Contains(request.PhoneNumber));
+            Query.Where(m => EF.Functions.ILike(m.PhoneNumber, $"%{request.PhoneNumber}%"));
         }
 
         if (!string.IsNullOrWhiteSpace(request.SortBy))
@@ -63,9 +64,12 @@ public class MemberSpecification : Specification<Member>
             Query.OrderBy(m => m.MemberId);
         }
 
-        var skip = (request.PageNumber - 1) * request.PageSize;
-        Query.Skip(skip).Take(request.PageSize);
-
+        if (!ignorePagination)
+        {
+            var skip = (request.PageNumber - 1) * request.PageSize;
+            Query.Skip(skip).Take(request.PageSize);
+        }
+        
         Query.Include(x => x.Orders)
             .ThenInclude(x => x.OrderItems)
             .Include(x => x.Orders)

@@ -10,5 +10,5 @@ public class OrderItem
 
     public Order Order { get; set; } = null!;
 
-    public byte[] RowVersion { get; set; } = null!;
+    public uint RowVersion { get; set; }
 }

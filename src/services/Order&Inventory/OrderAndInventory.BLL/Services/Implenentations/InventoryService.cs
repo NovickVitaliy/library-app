@@ -53,7 +53,7 @@ public class InventoryService : IInventoryService
 
         var specification = new InventorySpecification(request);
         var inventories = (await _unitOfWork.InventoryRepository.ListBySpecAsync(specification, cancellationToken)).ToList();
-        var totalCount = await _unitOfWork.InventoryRepository.CountBySpecAsync(specification, cancellationToken);
+        var totalCount = await _unitOfWork.InventoryRepository.CountBySpecAsync(new InventorySpecification(request, true), cancellationToken);
 
         _logger.LogInformation("Fetched {Count} inventories (Page {PageNumber}, PageSize {PageSize})",
             inventories.Count, request.PageNumber, request.PageSize);

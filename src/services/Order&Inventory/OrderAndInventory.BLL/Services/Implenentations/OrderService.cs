@@ -49,7 +49,7 @@ public class OrderService : IOrderService
         _logger.LogInformation("Fetching orders with filters: {@Request}", request);
         var specification = new OrderSpecification(request);
         var orders = (await _unitOfWork.OrderRepository.ListBySpecAsync(specification, cancellationToken)).ToList();
-        var totalCount = await _unitOfWork.OrderRepository.CountBySpecAsync(specification, cancellationToken);
+        var totalCount = await _unitOfWork.OrderRepository.CountBySpecAsync(new OrderSpecification(request, true), cancellationToken);
 
         return Result<PaginationResult<OrderDto>>.Ok(new PaginationResult<OrderDto>(
                 orders.Select(_mapper.Map<OrderDto>).ToArray(),
@@ -67,9 +67,24 @@ public class OrderService : IOrderService
             return Result<OrderDto?>.BadRequest(validationResult.First(x => !x.IsValid).Errors[0].ErrorMessage);
         }
 
+        var member = await _unitOfWork.MemberRepository.GetByIdAsync(request.MemberId, cancellationToken);
+        if (member is null)
+        {
+            return Result<OrderDto?>.NotFound(key: request.MemberId, nameof(Member));
+        }
+        
         var order = _mapper.Map<Order>(request);
         order.OrderId = Guid.CreateVersion7();
         order.Status = OrderStatus.Pending;
+        foreach (var orderItem in order.OrderItems)
+        {
+            orderItem.OrderId = order.OrderId;
+        }
+        
+        foreach (var staff in order.StaffOrders)
+        {
+            staff.OrderId = order.OrderId;
+        }
 
         await _unitOfWork.OrderRepository.AddAsync(order, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

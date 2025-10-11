@@ -12,5 +12,6 @@ public class Order
     public ICollection<Payment> Payments { get; set; } = [];
     public ICollection<StaffOrder> StaffOrders { get; set; } = [];
 
-    public byte[] RowVersion { get; set; } = null!;
+    
+    public uint RowVersion { get; set; }
 }   

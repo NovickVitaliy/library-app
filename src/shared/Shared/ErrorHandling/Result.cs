@@ -80,7 +80,7 @@ public class Result<T>
             problemDetails = new ProblemDetails()
             {
                 Status = (int)StatusCode,
-                Title = "An error occurred",
+                Title = StatusCode.ToString(),
                 Detail = Description,
                 Type = StatusCode.ToString()
             };

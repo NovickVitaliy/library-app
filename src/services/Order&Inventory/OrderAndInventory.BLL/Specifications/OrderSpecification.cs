@@ -6,7 +6,7 @@ namespace OrderAndInventory.BLL.Specifications;
 
 public class OrderSpecification : Specification<Order>
 {
-    public OrderSpecification(GetOrdersRequest request)
+    public OrderSpecification(GetOrdersRequest request, bool ignorePagination = false)
     {
         if (request.MinOrderDate.HasValue)
             Query.Where(o => o.OrderDate >= request.MinOrderDate.Value);
@@ -47,9 +47,12 @@ public class OrderSpecification : Specification<Order>
             Query.OrderBy(o => o.OrderId);
         }
 
-        var skip = (request.PageNumber - 1) * request.PageSize;
-        Query.Skip(skip).Take(request.PageSize);
-
+        if (!ignorePagination)
+        {
+            var skip = (request.PageNumber - 1) * request.PageSize;
+            Query.Skip(skip).Take(request.PageSize);
+        }
+        
         Query.Include(o => o.Member)
             .Include(o => o.OrderItems)
             .Include(o => o.Payments)

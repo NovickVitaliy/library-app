@@ -33,6 +33,9 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.Property(x => x.RowVersion)
-            .IsRowVersion();
+            .HasColumnName("xmin")
+            .HasColumnType("xid")
+            .IsConcurrencyToken()
+            .ValueGeneratedOnAddOrUpdate();
     }
 }

@@ -1,4 +1,5 @@
 using Ardalis.Specification;
+using Microsoft.EntityFrameworkCore;
 using OrderAndInventory.BLL.DTOs.Staff.Requests;
 using OrderAndInventory.DAL.Models;
 
@@ -6,13 +7,13 @@ namespace OrderAndInventory.BLL.Specifications;
 
 public class StaffSpecification : Specification<Staff>
 {
-    public StaffSpecification(GetStavesRequest request)
+    public StaffSpecification(GetStavesRequest request, bool ignorePagination = false)
     {
         if (!string.IsNullOrWhiteSpace(request.Name))
-            Query.Where(s => s.Name.Contains(request.Name));
+            Query.Where(s => EF.Functions.ILike(s.Name, $"%{request.Name}%"));
 
         if (!string.IsNullOrWhiteSpace(request.Role))
-            Query.Where(s => s.Role.Contains(request.Role));
+            Query.Where(s => EF.Functions.ILike(s.Role, $"%{request.Role}%"));
 
         if (!string.IsNullOrWhiteSpace(request.SortBy))
         {
@@ -39,7 +40,10 @@ public class StaffSpecification : Specification<Staff>
             Query.OrderBy(s => s.StaffId);
         }
 
-        var skip = (request.PageNumber - 1) * request.PageSize;
-        Query.Skip(skip).Take(request.PageSize);
+        if (!ignorePagination)
+        {
+            var skip = (request.PageNumber - 1) * request.PageSize;
+            Query.Skip(skip).Take(request.PageSize);
+        }
     }
 }
