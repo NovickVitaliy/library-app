@@ -25,23 +25,45 @@ services:
     volumes:
       - order-and-inventory-db.volume:/var/lib/postgresql/data  
   
-#  cartandwishlist.api:
-#    image: cartandwishlist.api
-#    build:
-#      context: .
-#      dockerfile: src/services/Cart&Wishlist/CartAndWishlist.API/Dockerfile
-#    container_name: cartandwishlist.api
-#    restart: always
-#    environment:
-#      - ASPNETCORE_ENVIRONMENT=Development
-#      - ASPNETCORE_HTTP_PORTS=8080
-#      - ConnectionStrings__Default=Host=cart-and-wishlist-db;Port=5432;Database=cartAndWishlistDb;Username=admin;Password=12345;
-#    depends_on:
-#      - cart-and-wishlist-db
-#    ports:
-#      - "16000:8080"
+  cartandwishlist.api:
+    image: cartandwishlist.api
+    build:
+      context: .
+      dockerfile: src/services/Cart&Wishlist/CartAndWishlist.API/Dockerfile
+    container_name: cartandwishlist.api
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__Default=Host=cart-and-wishlist-db;Port=5432;Database=cartAndWishlistDb;Username=admin;Password=12345;
+    depends_on:
+      - cart-and-wishlist-db
+    ports:
+      - "16000:8080"
+
+  book.catalog.db:
+    image: mongo
+    container_name: book.catalog.db
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - book.catalog.db:/data/db
+  
+  mongo-ui:
+    image: mongo-express
+    container_name: mongo-ui
+    restart: always
+    ports:
+      - "14999:8081"
+    environment:
+      - ME_CONFIG_MONGODB_URL=mongodb://book.catalog.db:27017/
+      - ME_CONFIG_BASICAUTH=false
+    depends_on:
+      - book.catalog.db
 
 volumes:
   cart-and-wishlist-db.volume:
   order-and-inventory-db.volume:
+  book.catalog.db:
 
