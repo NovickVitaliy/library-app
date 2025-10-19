@@ -1,4 +1,5 @@
 using BookCatalog.Domain.Models;
+using BookCatalog.Domain.ValueObjects;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
@@ -33,9 +34,9 @@ public static class DbSetup
         if (!await dbContext.Publishers.Find(_ => true).AnyAsync())
         {
             await dbContext.Publishers.InsertManyAsync([
-                new Publisher { PublisherId = Guid.NewGuid(), Name = "Penguin Books", Address = "80 Strand, London, UK" },
-                new Publisher { PublisherId = Guid.NewGuid(), Name = "HarperCollins", Address = "195 Broadway, New York, USA" },
-                new Publisher { PublisherId = Guid.NewGuid(), Name = "Macmillan Publishers", Address = "120 Broadway, New York, USA" }
+                new Publisher { PublisherId = Guid.NewGuid(), Name = "Penguin Books", Address = Address.Create("80 Strand, London, UK") },
+                new Publisher { PublisherId = Guid.NewGuid(), Name = "HarperCollins", Address = Address.Create("195 Broadway, New York, USA") },
+                new Publisher { PublisherId = Guid.NewGuid(), Name = "Macmillan Publishers", Address = Address.Create("120 Broadway, New York, USA") }
             ]);
         }
 

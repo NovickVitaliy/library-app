@@ -1,3 +1,4 @@
+using BookCatalog.Domain.ValueObjects;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -9,5 +10,5 @@ public class Publisher
     [BsonRepresentation(BsonType.String)]
     public Guid PublisherId { get; set; }
     public string Name { get; set; } = null!;
-    public string Address { get; set; } = null!;
+    public Address Address { get; set; } = null!;
 }
