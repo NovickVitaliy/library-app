@@ -40,6 +40,21 @@ services:
       - cart-and-wishlist-db
     ports:
       - "16000:8080"
+  
+  order.and.inventory.api:
+    container_name: order.and.inventory.api
+    build:
+      context: .
+      dockerfile: src/services/Order&Inventory/OrderAndInventory.API/Dockerfile
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ConnectionStrings__Default=Host=order-and-inventory-db;Port=5432;Database=orderAndInventoryDb;Username=admin;Password=12345;
+    depends_on:
+      - order-and-inventory-db
+    ports:
+      - "16100:8080"
 
   book.catalog.db:
     image: mongo

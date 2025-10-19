@@ -7,6 +7,6 @@ public record PaginationResult<TEntity>(
     decimal TotalPages,
     int PageSize)
 {
-    public bool HasNext => CurrentPage < PageSize;
+    public bool HasNext => CurrentPage < TotalPages;
     public bool HasPrevious => CurrentPage > 1;
 }
