@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -71,7 +72,10 @@ public class GlobalExceptionHandler : IExceptionHandler
                 Status = (int)HttpStatusCode.InternalServerError,
                 Instance = context.Request.Path
             },
-
+            ValidationException validationEx => new ProblemDetails()
+            {
+                
+            },
             _ => new ProblemDetails
             {
                 Type = "https://httpstatuses.com/500",
