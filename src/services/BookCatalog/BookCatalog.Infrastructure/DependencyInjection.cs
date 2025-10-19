@@ -1,5 +1,7 @@
-﻿using BookCatalog.Infrastructure.Database;
+﻿using BookCatalog.Application.Contracts.Repositories;
+using BookCatalog.Infrastructure.Database;
 using BookCatalog.Infrastructure.Options;
+using BookCatalog.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -24,6 +26,11 @@ public static class DependencyInjection
         });
 
         services.AddScoped<BookCatalogDbContext>();
+
+        services.AddScoped<IBookRepository, BookRepository>();
+        services.AddScoped<IGenreRepository, GenreRepository>();
+        services.AddScoped<IPublisherRepository, PublisherRepository>();
+        services.AddScoped<IReviewRepository, ReviewRepository>();
         
         return services;
     }

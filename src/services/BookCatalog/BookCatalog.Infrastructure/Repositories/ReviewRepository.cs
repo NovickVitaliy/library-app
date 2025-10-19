@@ -1,0 +1,72 @@
+using BookCatalog.Application.Contracts.Repositories;
+using BookCatalog.Domain.Models;
+using BookCatalog.Infrastructure.Database;
+using MongoDB.Driver;
+using Shared.DTOs;
+
+namespace BookCatalog.Infrastructure.Repositories;
+
+public class ReviewRepository : IReviewRepository
+{
+    private readonly BookCatalogDbContext _dbContext;
+
+    public ReviewRepository(BookCatalogDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    public async Task<Review> CreateAsync(Review review, CancellationToken cancellationToken)
+    {
+        await _dbContext.Reviews.InsertOneAsync(review, DatabaseShared.EmptyInsertOneOptions(), cancellationToken);
+
+        return review;
+    }
+
+    public async Task<Review?> GetByIdAsync(Guid reviewId, CancellationToken cancellationToken)
+    {
+        return await (await _dbContext.Reviews.FindAsync(Builders<Review>.Filter.Eq(x => x.ReviewId, reviewId), cancellationToken: cancellationToken))
+            .SingleOrDefaultAsync(cancellationToken);
+    }
+    
+    public async Task<PaginationResult<Review>> GetAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
+    {
+        var entities = await _dbContext.Reviews
+            .Find(_ => true)
+            .Sort(Builders<Review>.Sort.Ascending(x => x.ReviewId))
+            .Skip((pageNumber - 1) * pageSize)
+            .Limit(pageSize)
+            .ToListAsync(cancellationToken: cancellationToken);
+
+        var totalCount = await CountAsync(cancellationToken);
+        
+        return PaginationResult<Review>.Create(
+                entities.ToArray(),
+                totalCount,
+                pageNumber,
+                pageSize);
+    }
+    public Task<long> CountAsync(CancellationToken cancellationToken)
+    {
+        return _dbContext.Reviews.CountDocumentsAsync(_ => true, cancellationToken: cancellationToken);
+    }
+    
+    public async Task<Review?> UpdateAsync(Guid reviewId, Review review, CancellationToken cancellationToken)
+    {
+        var filter = Builders<Review>.Filter.Eq(x => x.ReviewId, reviewId);
+
+        var update = Builders<Review>.Update
+            .Set(x => x.Rating, review.Rating)
+            .Set(x => x.Text, review.Text);
+
+        await _dbContext.Reviews.UpdateOneAsync(filter, update, cancellationToken: cancellationToken);
+
+        return review;
+    }
+    
+    public async Task<bool> DeleteAsync(Guid reviewId, CancellationToken cancellationToken)
+    {
+        var deletionResult = await _dbContext.Reviews.DeleteOneAsync(x => x.ReviewId == reviewId, cancellationToken);
+
+        return deletionResult.DeletedCount == 1;
+    }
+}

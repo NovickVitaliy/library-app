@@ -9,4 +9,14 @@ public record PaginationResult<TEntity>(
 {
     public bool HasNext => CurrentPage < TotalPages;
     public bool HasPrevious => CurrentPage > 1;
+
+    public static PaginationResult<TEntity> Create(TEntity[] entities, long totalCount, int currentPage, int pageSize)
+    {
+        return new PaginationResult<TEntity>(
+            entities,
+            totalCount,
+            currentPage,
+            Math.Ceiling((decimal)totalCount / pageSize),
+            pageSize);
+    }
 }
