@@ -20,3 +20,15 @@ public record PaginationResult<TEntity>(
             pageSize);
     }
 }
+
+public static class PaginationResultExtensions
+{
+    public static PaginationResult<TDto> ToPaginatedDtos<TEntity, TDto>(this PaginationResult<TEntity> src, Func<TEntity, TDto> dtoFactory)
+    {
+        return PaginationResult<TDto>.Create(
+                src.Entities.Select(dtoFactory).ToArray(),
+                src.TotalCount,
+                src.CurrentPage,
+                src.PageSize);
+    }
+}

@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using BookCatalog.Application.Contracts.Repositories;
 using BookCatalog.Domain.Models;
 using BookCatalog.Infrastructure.Database;
@@ -28,16 +29,17 @@ public class ReviewRepository : IReviewRepository
             .SingleOrDefaultAsync(cancellationToken);
     }
     
-    public async Task<PaginationResult<Review>> GetAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)
+    public async Task<PaginationResult<Review>> GetAsync(Guid bookId, int pageNumber, int pageSize, CancellationToken cancellationToken)
     {
+        Expression<Func<Review, bool>> predicate = x => x.BookId == bookId;
         var entities = await _dbContext.Reviews
-            .Find(_ => true)
+            .Find(predicate)
             .Sort(Builders<Review>.Sort.Ascending(x => x.ReviewId))
             .Skip((pageNumber - 1) * pageSize)
             .Limit(pageSize)
             .ToListAsync(cancellationToken: cancellationToken);
 
-        var totalCount = await CountAsync(cancellationToken);
+        var totalCount = await CountAsync(predicate, cancellationToken);
         
         return PaginationResult<Review>.Create(
                 entities.ToArray(),
@@ -45,9 +47,10 @@ public class ReviewRepository : IReviewRepository
                 pageNumber,
                 pageSize);
     }
-    public Task<long> CountAsync(CancellationToken cancellationToken)
+    
+    public Task<long> CountAsync(Expression<Func<Review, bool>> predicate, CancellationToken cancellationToken)
     {
-        return _dbContext.Reviews.CountDocumentsAsync(_ => true, cancellationToken: cancellationToken);
+        return _dbContext.Reviews.Find(predicate).CountDocumentsAsync(cancellationToken: cancellationToken);
     }
     
     public async Task<Review?> UpdateAsync(Guid reviewId, Review review, CancellationToken cancellationToken)

@@ -11,8 +11,16 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\shared\Shared.CQRS\Shared.CQRS.csproj" />
       <ProjectReference Include="..\..\..\shared\Shared\Shared.csproj" />
       <ProjectReference Include="..\BookCatalog.Domain\BookCatalog.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="DTOs\Books\Requests\" />
+      <Folder Include="DTOs\Genres\Requests\" />
+      <Folder Include="DTOs\Publishers\Requests\" />
+      <Folder Include="DTOs\Reviews\Requests\" />
     </ItemGroup>
     
 </Project>
