@@ -1,17 +1,18 @@
 using BookCatalog.Application.DTOs.Genres.Requests;
+using BookCatalog.Application.UseCases.Commands.Genres.Update;
 using FluentValidation;
 
 namespace BookCatalog.Application.Validators.Genres;
 
-public class UpdateGenreRequestValidator : AbstractValidator<UpdateGenreRequest>
+public class UpdateGenreRequestValidator : AbstractValidator<UpdateGenreCommand>
 {
     public UpdateGenreRequestValidator()
     {
-        RuleFor(x => x.Name)
+        RuleFor(x => x.Request.Name)
             .NotEmpty()
             .WithMessage("Name is required");
 
-        RuleFor(x => x.Description)
+        RuleFor(x => x.Request.Description)
             .NotEmpty()
             .WithMessage("Description is required");
     }
