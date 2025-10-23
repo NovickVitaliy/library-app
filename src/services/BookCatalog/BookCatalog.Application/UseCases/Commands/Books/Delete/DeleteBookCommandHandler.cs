@@ -26,7 +26,7 @@ public sealed class DeleteBookCommandHandler : ICommandHandler<DeleteBookCommand
         var success = await _bookRepository.DeleteAsync(request.BookId, cancellationToken);
 
         return success
-            ? Result<bool>.BadRequest("Error during deletion of the book")
-            : Result<bool>.NoContent();
+            ? Result<bool>.NoContent()
+            : Result<bool>.BadRequest("Error during deletion of the book");
     }
 }

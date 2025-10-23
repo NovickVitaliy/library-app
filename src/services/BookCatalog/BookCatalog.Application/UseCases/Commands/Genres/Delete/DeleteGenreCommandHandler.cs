@@ -25,7 +25,7 @@ public sealed class DeleteGenreCommandHandler : ICommandHandler<DeleteGenreComma
         var success = await _genreRepository.DeleteAsync(request.GenreId, cancellationToken);
 
         return success
-            ? Result<bool>.BadRequest("Error during deletion of the genre")
-            : Result<bool>.NoContent();
+            ? Result<bool>.NoContent()
+            : Result<bool>.BadRequest("Error during deletion of the genre");
     }
 }

@@ -1,17 +1,18 @@
 using BookCatalog.Application.DTOs.Publishers.Requests;
+using BookCatalog.Application.UseCases.Commands.Publishers.Create;
 using FluentValidation;
 
 namespace BookCatalog.Application.Validators.Publishers;
 
-public class CreatePublisherRequestValidator : AbstractValidator<CreatePublisherRequest>
+public class CreatePublisherRequestValidator : AbstractValidator<CreatePublisherCommand>
 {
     public CreatePublisherRequestValidator()
     {
-        RuleFor(x => x.Name)
+        RuleFor(x => x.Request.Name)
             .NotEmpty()
             .WithMessage("Name is required");
 
-        RuleFor(x => x.Address)
+        RuleFor(x => x.Request.Address)
             .NotEmpty()
             .WithMessage("Address is required");
     }
