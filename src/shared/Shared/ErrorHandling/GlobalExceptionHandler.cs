@@ -12,14 +12,14 @@ namespace Shared.ErrorHandling;
 public class GlobalExceptionHandler : IExceptionHandler
 {
     private readonly ILogger<GlobalExceptionHandler> _logger;
-    
+
     public GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger)
     {
         _logger = logger;
     }
-    
+
     public async ValueTask<bool> TryHandleAsync(
-        HttpContext httpContext, 
+        HttpContext httpContext,
         Exception exception,
         CancellationToken cancellationToken)
     {
@@ -41,7 +41,7 @@ public class GlobalExceptionHandler : IExceptionHandler
 
         return true;
     }
-    
+
     private static ProblemDetails CreateProblemDetails(Exception exception, HttpContext context)
     {
         return exception switch
@@ -72,9 +72,19 @@ public class GlobalExceptionHandler : IExceptionHandler
                 Status = (int)HttpStatusCode.InternalServerError,
                 Instance = context.Request.Path
             },
-            ValidationException validationEx => new ProblemDetails()
+            ValidationException validationEx => new ValidationProblemDetails(
+                validationEx.Errors
+                    .GroupBy(e => e.PropertyName)
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.Select(e => e.ErrorMessage).ToArray()
+                    )
+            )
             {
-                
+                Type = "https://httpstatuses.com/400",
+                Title = "One or more validation errors occurred",
+                Status = (int)HttpStatusCode.BadRequest,
+                Instance = context.Request.Path
             },
             _ => new ProblemDetails
             {

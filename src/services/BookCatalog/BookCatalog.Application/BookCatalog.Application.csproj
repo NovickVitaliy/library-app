@@ -17,10 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="DTOs\Books\Requests\" />
-      <Folder Include="DTOs\Genres\Requests\" />
-      <Folder Include="DTOs\Publishers\Requests\" />
-      <Folder Include="DTOs\Reviews\Requests\" />
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
     </ItemGroup>
     
 </Project>
