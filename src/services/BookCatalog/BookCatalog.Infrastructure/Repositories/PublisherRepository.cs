@@ -24,9 +24,21 @@ public class PublisherRepository : IPublisherRepository
     
     public async Task<Publisher?> GetByIdAsync(Guid publisherId, CancellationToken cancellationToken)
     {
-        var filter = Builders<Publisher>.Filter.Eq(x => x.PublisherId, publisherId);
+        var collection = _dbContext.Publishers;
 
-        return await (await _dbContext.Publishers.FindAsync(filter, cancellationToken: cancellationToken)).SingleOrDefaultAsync(cancellationToken);
+        var bookLookup = PipelineStageDefinitionBuilder.Lookup<Publisher, Book, Publisher>(
+                foreignCollection: _dbContext.Books,
+                localField: x => x.BooksIds,
+                foreignField: x => x.BookId,
+                @as: x => x.Books);
+
+        var publisher = await collection
+            .Aggregate()
+            .Match(Builders<Publisher>.Filter.Eq(x => x.PublisherId, publisherId))
+            .AppendStage(bookLookup)
+            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+
+        return publisher;
     }
     
     public async Task<PaginationResult<Publisher>> GetAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)

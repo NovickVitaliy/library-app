@@ -11,4 +11,6 @@ public record CreateBookRequest(
         string? FileFormat,
         string? DownloadLink,
         string? Illustrator,
-        string? Edition);
+        string? Edition,
+        Guid[] GenresIds,
+        Guid[] PublishersIds);

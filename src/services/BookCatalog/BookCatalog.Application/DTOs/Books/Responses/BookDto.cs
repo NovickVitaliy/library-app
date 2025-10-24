@@ -1,3 +1,7 @@
+using BookCatalog.Application.DTOs.Genres.Responses;
+using BookCatalog.Application.DTOs.Publishers.Responses;
+using BookCatalog.Application.DTOs.Reviews.Responses;
+
 namespace BookCatalog.Application.DTOs.Books.Responses;
 
 public record BookDto(
@@ -12,4 +16,7 @@ public record BookDto(
         string? FileFormat,
         string? DownloadLink,
         string? Illustrator,
-        string? Edition);
+        string? Edition,
+        PublisherDto[] Publishers,
+        GenreDto[] Genres,
+        ReviewDto[] Reviews);

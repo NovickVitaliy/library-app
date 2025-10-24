@@ -31,7 +31,10 @@ public sealed class CreateBookCommandHandler : ICommandHandler<CreateBookCommand
             Price = request.Request.Price,
             ShelfLocation = request.Request.ShelfLocation,
             ShippingCost = request.Request.ShippingCost,
-            Weight = request.Request.Weight
+            Weight = request.Request.Weight,
+            ReviewsIds = [],
+            GenresIds = request.Request.GenresIds.ToList(),
+            PublishersIds = request.Request.PublishersIds.ToList()
         };
 
         book = await _bookRepository.CreateAsync(book, cancellationToken);

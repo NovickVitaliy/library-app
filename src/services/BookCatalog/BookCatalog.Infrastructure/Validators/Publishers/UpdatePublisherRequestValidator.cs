@@ -1,8 +1,7 @@
-using BookCatalog.Application.DTOs.Publishers.Requests;
 using BookCatalog.Application.UseCases.Commands.Publishers.Update;
 using FluentValidation;
 
-namespace BookCatalog.Application.Validators.Publishers;
+namespace BookCatalog.Infrastructure.Validators.Publishers;
 
 public class UpdatePublisherRequestValidator : AbstractValidator<UpdatePublisherCommand>
 {

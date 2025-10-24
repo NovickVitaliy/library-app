@@ -28,9 +28,33 @@ public class BookRepository : IBookRepository
     {
         var collection = _dbContext.Books;
 
-        var filter = Builders<Book>.Filter.Eq(x => x.BookId, bookId);
+        var lookupPublishers = PipelineStageDefinitionBuilder.Lookup<Book, Publisher, Book>(
+                foreignCollection: _dbContext.Publishers,
+                localField: x => x.PublishersIds,
+                foreignField: x => x.PublisherId,
+                @as: x=> x.Publishers);
 
-        return await (await collection.FindAsync(filter, cancellationToken: cancellationToken)).SingleOrDefaultAsync(cancellationToken: cancellationToken);
+        var lookupGenres = PipelineStageDefinitionBuilder.Lookup<Book, Genre, Book>(
+                foreignCollection: _dbContext.Genres,
+                localField: x=> x.GenresIds,
+                foreignField: x=> x.GenreId,
+                @as: x => x.Genres);
+
+        var lookupReviews = PipelineStageDefinitionBuilder.Lookup<Book, Review, Book>(
+                foreignCollection: _dbContext.Reviews,
+                localField: x => x.ReviewsIds,
+                foreignField: x => x.ReviewId,
+                @as: x => x.Reviews);
+        
+        var book = await collection
+            .Aggregate()
+            .Match(Builders<Book>.Filter.Eq(x => x.BookId, bookId))
+            .AppendStage(lookupPublishers)
+            .AppendStage(lookupGenres)
+            .AppendStage(lookupReviews)
+            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+
+        return book;
     }
     
     public async Task<PaginationResult<Book>> GetAsync(int pageNumber, int pageSize, CancellationToken cancellationToken)

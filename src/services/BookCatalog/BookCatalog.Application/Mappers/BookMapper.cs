@@ -17,5 +17,8 @@ public static class BookMapper
             book.FileFormat,
             book.DownloadLink,
             book.Illustrator,
-            book.Edition);
+            book.Edition,
+            book.Publishers.Select(PublisherMapper.ToDto).ToArray(),
+            book.Genres.Select(GenreMapper.ToDto).ToArray(),
+            book.Reviews.Select(ReviewMapper.ToDto).ToArray());
 }

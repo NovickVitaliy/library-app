@@ -19,4 +19,12 @@ public class Book
     public string? DownloadLink { get; set; }
     public string? Illustrator { get; set; }
     public string? Edition { get; set; }
+
+    public Genre[] Genres { get; set; } = [];
+    public Publisher[] Publishers { get; set; } = [];
+    public Review[] Reviews { get; set; } = [];
+    
+    public List<Guid> GenresIds { get; set; } = [];
+    public List<Guid> PublishersIds { get; set; } = [];
+    public List<Guid> ReviewsIds { get; set; } = [];
 }

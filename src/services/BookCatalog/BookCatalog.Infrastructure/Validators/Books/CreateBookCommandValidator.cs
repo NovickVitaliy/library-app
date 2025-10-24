@@ -1,13 +1,18 @@
-using BookCatalog.Application.DTOs.Books.Requests;
 using BookCatalog.Application.UseCases.Commands.Books.Create;
+using BookCatalog.Domain.Models;
+using BookCatalog.Infrastructure.Database;
 using FluentValidation;
+using MongoDB.Driver;
 
-namespace BookCatalog.Application.Validators.Books;
+namespace BookCatalog.Infrastructure.Validators.Books;
 
 public class CreateBookCommandValidator : AbstractValidator<CreateBookCommand>
 {
-    public CreateBookCommandValidator()
+    private readonly BookCatalogDbContext _dbContext;
+    
+    public CreateBookCommandValidator(BookCatalogDbContext dbContext)
     {
+        _dbContext = dbContext;
         RuleFor(x => x.Request.Title)
             .NotEmpty().WithMessage("Title is required.")
             .MaximumLength(200);
@@ -49,6 +54,33 @@ public class CreateBookCommandValidator : AbstractValidator<CreateBookCommand>
                 .Must(link => Uri.IsWellFormedUriString(link, UriKind.Absolute))
                 .WithMessage("Download link must be a valid URL.");
         });
+
+        RuleFor(x => x.Request.GenresIds)
+            .MustAsync(AllGenresExistAsync)
+            .WithMessage("Some of the given genres does not exist");
+        
+        
+        RuleFor(x => x.Request.PublishersIds)
+            .MustAsync(AllPublishersExistAsync)
+            .WithMessage("Some of the given publishers does not exist");
+    }
+    
+    private async Task<bool> AllPublishersExistAsync(Guid[] ids, CancellationToken cancellationToken)
+    {
+        var count = await _dbContext.Publishers.CountDocumentsAsync(
+            Builders<Publisher>.Filter.In(p => p.PublisherId, ids),
+            cancellationToken: cancellationToken);
+
+        return count == ids.Length;
+    }
+
+    private async Task<bool> AllGenresExistAsync(Guid[] ids, CancellationToken cancellationToken)
+    {
+        var count = await _dbContext.Genres.CountDocumentsAsync(
+            Builders<Genre>.Filter.In(g => g.GenreId, ids),
+            cancellationToken: cancellationToken);
+
+        return count == ids.Length;
     }
 
     private static bool BeEitherPhysicalOrDigital(CreateBookCommand request)

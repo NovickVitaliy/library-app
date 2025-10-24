@@ -11,4 +11,7 @@ public class Publisher
     public Guid PublisherId { get; set; }
     public string Name { get; set; } = null!;
     public Address Address { get; set; } = null!;
+
+    public Guid[] BooksIds { get; set; } = [];
+    public Book[] Books { get; set; } = [];
 }

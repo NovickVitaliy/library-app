@@ -1,13 +1,18 @@
-using BookCatalog.Application.DTOs.Books.Requests;
 using BookCatalog.Application.UseCases.Commands.Books.Update;
+using BookCatalog.Domain.Models;
+using BookCatalog.Infrastructure.Database;
 using FluentValidation;
+using MongoDB.Driver;
 
-namespace BookCatalog.Application.Validators.Books;
+namespace BookCatalog.Infrastructure.Validators.Books;
 
 public class UpdateBookRequestValidator : AbstractValidator<UpdateBookCommand>
 {
-    public UpdateBookRequestValidator()
+    private readonly BookCatalogDbContext _dbContext;
+
+    public UpdateBookRequestValidator(BookCatalogDbContext dbContext)
     {
+        _dbContext = dbContext;
         RuleFor(x => x.BookId)
             .NotEmpty()
             .WithMessage("Book ID is required");
@@ -53,8 +58,35 @@ public class UpdateBookRequestValidator : AbstractValidator<UpdateBookCommand>
                 .Must(link => Uri.IsWellFormedUriString(link, UriKind.Absolute))
                 .WithMessage("Download link must be a valid URL.");
         });
+        
+        RuleFor(x => x.Request.GenresIds)
+            .MustAsync(AllGenresExistAsync)
+            .WithMessage("Some of the given genres does not exist");
+        
+        
+        RuleFor(x => x.Request.PublishersIds)
+            .MustAsync(AllPublishersExistAsync)
+            .WithMessage("Some of the given publishers does not exist");
     }
 
+    private async Task<bool> AllPublishersExistAsync(Guid[] ids, CancellationToken cancellationToken)
+    {
+        var count = await _dbContext.Publishers.CountDocumentsAsync(
+            Builders<Publisher>.Filter.In(p => p.PublisherId, ids),
+            cancellationToken: cancellationToken);
+
+        return count == ids.Length;
+    }
+
+    private async Task<bool> AllGenresExistAsync(Guid[] ids, CancellationToken cancellationToken)
+    {
+        var count = await _dbContext.Genres.CountDocumentsAsync(
+            Builders<Genre>.Filter.In(g => g.GenreId, ids),
+            cancellationToken: cancellationToken);
+
+        return count == ids.Length;
+    }
+    
     private static bool BeEitherPhysicalOrDigital(UpdateBookCommand request)
     {
         var isPhysical = request.Request.Weight.HasValue || !string.IsNullOrWhiteSpace(request.Request.ShelfLocation);

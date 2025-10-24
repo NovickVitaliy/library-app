@@ -20,6 +20,12 @@ public class ReviewRepository : IReviewRepository
     {
         await _dbContext.Reviews.InsertOneAsync(review, DatabaseShared.EmptyInsertOneOptions(), cancellationToken);
 
+        var book = await (await _dbContext.Books.FindAsync(x => x.BookId == review.BookId, cancellationToken: cancellationToken)).SingleAsync(cancellationToken: cancellationToken);
+        
+        book.ReviewsIds.Add(review.ReviewId);
+
+        await _dbContext.Books.UpdateOneAsync(x => x.BookId == review.BookId, Builders<Book>.Update.Set(x => x.ReviewsIds, book.ReviewsIds), cancellationToken: cancellationToken);
+        
         return review;
     }
 

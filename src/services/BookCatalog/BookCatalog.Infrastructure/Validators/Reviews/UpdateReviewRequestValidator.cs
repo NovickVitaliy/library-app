@@ -1,7 +1,7 @@
 using BookCatalog.Application.DTOs.Reviews.Requests;
 using FluentValidation;
 
-namespace BookCatalog.Application.Validators.Reviews;
+namespace BookCatalog.Infrastructure.Validators.Reviews;
 
 public class UpdateReviewRequestValidator : AbstractValidator<UpdateReviewRequest>
 {

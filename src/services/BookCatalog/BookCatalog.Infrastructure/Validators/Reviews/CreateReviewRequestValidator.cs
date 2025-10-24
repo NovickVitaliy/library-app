@@ -1,13 +1,18 @@
-using BookCatalog.Application.DTOs.Reviews.Requests;
 using BookCatalog.Application.UseCases.Commands.Reviews.Create;
+using BookCatalog.Domain.Models;
+using BookCatalog.Infrastructure.Database;
 using FluentValidation;
+using MongoDB.Driver;
 
-namespace BookCatalog.Application.Validators.Reviews;
+namespace BookCatalog.Infrastructure.Validators.Reviews;
 
 public class CreateReviewRequestValidator : AbstractValidator<CreateReviewCommand>
 {
-    public CreateReviewRequestValidator()
+    private readonly BookCatalogDbContext _dbContext;
+    
+    public CreateReviewRequestValidator(BookCatalogDbContext dbContext)
     {
+        _dbContext = dbContext;
         RuleFor(x => x.Request.BookId)
             .MustAsync(BookMustExistAsync)
             .WithMessage("Book with such ID does not exist");
@@ -24,15 +29,18 @@ public class CreateReviewRequestValidator : AbstractValidator<CreateReviewComman
             .MaximumLength(200)
             .WithMessage("Maximum lenght of review test is 200 characters");
     }
-    private Task<bool> UserMustExistAsync(Guid arg1, CancellationToken arg2)
+    private Task<bool> UserMustExistAsync(Guid id, CancellationToken cancellationToken)
     {
-        // mock
+        // mock (its gonna be a call to the users api in the future)
         return Task.FromResult(true);
     }
 
-    private Task<bool> BookMustExistAsync(Guid arg1, CancellationToken arg2)
+    private async Task<bool> BookMustExistAsync(Guid id, CancellationToken cancellationToken)
     {
-        // mock
-        return Task.FromResult(true);
+        var count = await _dbContext.Books.CountDocumentsAsync(
+            Builders<Book>.Filter.Eq(x => x.BookId, id),
+            cancellationToken: cancellationToken);
+
+        return count == 1;
     }
 }

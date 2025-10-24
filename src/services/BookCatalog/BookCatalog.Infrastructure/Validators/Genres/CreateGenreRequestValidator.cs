@@ -1,8 +1,7 @@
-using BookCatalog.Application.DTOs.Genres.Requests;
 using BookCatalog.Application.UseCases.Commands.Genres.Create;
 using FluentValidation;
 
-namespace BookCatalog.Application.Validators.Genres;
+namespace BookCatalog.Infrastructure.Validators.Genres;
 
 public class CreateGenreRequestValidator : AbstractValidator<CreateGenreCommand>
 {
