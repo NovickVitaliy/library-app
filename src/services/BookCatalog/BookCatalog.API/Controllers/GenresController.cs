@@ -11,7 +11,7 @@ using Shared.DTOs;
 
 namespace BookCatalog.API.Controllers;
 
-[Microsoft.AspNetCore.Components.Route("api/genres")]
+[Route("api/genres")]
 public class GenresController : BaseApiController
 {
     private readonly ISender _sender;

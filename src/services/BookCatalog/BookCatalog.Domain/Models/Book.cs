@@ -20,9 +20,9 @@ public class Book
     public string? Illustrator { get; set; }
     public string? Edition { get; set; }
 
-    public Genre[] Genres { get; set; } = [];
-    public Publisher[] Publishers { get; set; } = [];
-    public Review[] Reviews { get; set; } = [];
+   [BsonIgnoreIfDefault] public Genre[] Genres { get; set; } = [];
+   [BsonIgnoreIfDefault] public Publisher[] Publishers { get; set; } = [];
+   [BsonIgnoreIfDefault] public Review[] Reviews { get; set; } = [];
     
     public List<Guid> GenresIds { get; set; } = [];
     public List<Guid> PublishersIds { get; set; } = [];

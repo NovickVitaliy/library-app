@@ -55,6 +55,23 @@ services:
       - order-and-inventory-db
     ports:
       - "16100:8080"
+        
+  book.catalog.api:
+    image: book.catalog.api
+    build:
+      context: .
+      dockerfile: src/services/BookCatalog/BookCatalog.API/Dockerfile
+    container_name: book.catalog.api
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - MongoOptions__ConnectionString=mongodb://book.catalog.db:27017
+      - MongoOptions__DatabaseName=book-catalog-db
+    depends_on:
+      - book.catalog.db
+    ports:
+      - "16200:8080"
 
   book.catalog.db:
     image: mongo

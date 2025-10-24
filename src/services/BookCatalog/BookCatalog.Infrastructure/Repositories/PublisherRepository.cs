@@ -26,17 +26,12 @@ public class PublisherRepository : IPublisherRepository
     {
         var collection = _dbContext.Publishers;
 
-        var bookLookup = PipelineStageDefinitionBuilder.Lookup<Publisher, Book, Publisher>(
-                foreignCollection: _dbContext.Books,
-                localField: x => x.BooksIds,
-                foreignField: x => x.BookId,
-                @as: x => x.Books);
-
         var publisher = await collection
             .Aggregate()
             .Match(Builders<Publisher>.Filter.Eq(x => x.PublisherId, publisherId))
-            .AppendStage(bookLookup)
             .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+
+        publisher.Books = (await (await _dbContext.Books.FindAsync(Builders<Book>.Filter.In(x => x.BookId, publisher.BooksIds), cancellationToken: cancellationToken)).ToListAsync(cancellationToken: cancellationToken)).ToArray();
 
         return publisher;
     }
@@ -82,6 +77,15 @@ public class PublisherRepository : IPublisherRepository
     {
         var deletionResult = await _dbContext.Publishers.DeleteOneAsync(x => x.PublisherId == publisherId, cancellationToken);
 
+        var books = await (await _dbContext.Books.FindAsync(Builders<Book>.Filter.AnyEq(p => p.PublishersIds, publisherId), cancellationToken: cancellationToken)).ToListAsync(cancellationToken: cancellationToken);
+        foreach (var book in books)
+        {
+            var bookToUpdate = Builders<Book>.Update.Pull(x => x.PublishersIds, publisherId);
+
+            await _dbContext.Books.UpdateOneAsync(x => x.BookId == book.BookId, bookToUpdate, cancellationToken: cancellationToken);
+        }
+
+        
         return deletionResult.DeletedCount == 1;
     }
 }

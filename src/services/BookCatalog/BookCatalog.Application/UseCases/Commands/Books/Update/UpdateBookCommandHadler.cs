@@ -36,6 +36,8 @@ public sealed class UpdateBookCommandHadler : ICommandHandler<UpdateBookCommand,
         book.DownloadLink = request.Request.DownloadLink;
         book.Illustrator = request.Request.Illustrator;
         book.Edition = request.Request.Edition;
+        book.GenresIds = request.Request.GenresIds.ToList();
+        book.PublishersIds = request.Request.PublishersIds.ToList();
 
         book = await _bookRepository.UpdateAsync(request.BookId, book, cancellationToken);
         

@@ -13,5 +13,5 @@ public class Publisher
     public Address Address { get; set; } = null!;
 
     public Guid[] BooksIds { get; set; } = [];
-    public Book[] Books { get; set; } = [];
+    [BsonIgnore] public Book[] Books { get; set; } = [];
 }

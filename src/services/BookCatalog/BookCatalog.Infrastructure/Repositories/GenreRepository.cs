@@ -85,6 +85,14 @@ public class GenreRepository : IGenreRepository
         var collection = _dbContext.Genres;
 
         var result = await collection.DeleteOneAsync(x => x.GenreId == genreId, cancellationToken);
+        
+        var books = await (await _dbContext.Books.FindAsync(Builders<Book>.Filter.AnyEq(p => p.GenresIds, genreId), cancellationToken: cancellationToken)).ToListAsync(cancellationToken: cancellationToken);
+        foreach (var book in books)
+        {
+            var bookToUpdate = Builders<Book>.Update.Pull(x => x.GenresIds, genreId);
+
+            await _dbContext.Books.UpdateOneAsync(x => x.BookId == book.BookId, bookToUpdate, cancellationToken: cancellationToken);
+        }
 
         return result.DeletedCount == 1;
     }
